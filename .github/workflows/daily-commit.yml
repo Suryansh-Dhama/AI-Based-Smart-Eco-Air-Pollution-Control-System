@@ -1,0 +1,31 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Make change
+        run: |
+          echo "Auto commit on $(date)" >> auto-log.txt
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Suryansh-Dhama"
+          git config --global user.email "Toxicsaransh@gmail.com"
+          git add .
+          git commit -m "Daily auto commit" || echo "No changes"
+          git push
